@@ -1,0 +1,97 @@
+#! /usr/bin/vvp
+:ivl_version "12.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 12;
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/system.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2005_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/va_math.vpi";
+S_0x57890a9a95a0 .scope module, "baud_tb" "baud_tb" 2 3;
+ .timescale -9 -12;
+v0x57890a9d05e0_0 .var "clk", 0 0;
+v0x57890a9d0680_0 .var "rst", 0 0;
+v0x57890a9d0750_0 .net "tick", 0 0, L_0x57890a9e0a30;  1 drivers
+S_0x57890a980490 .scope module, "uut" "baud" 2 14, 3 2 0, S_0x57890a9a95a0;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 1 "rst";
+    .port_info 2 /OUTPUT 1 "tick";
+P_0x57890a9a6280 .param/l "BAUD_RATE" 0 3 4, +C4<00000000000000011100001000000000>;
+P_0x57890a9a62c0 .param/l "CLK_freq" 0 3 3, +C4<00000010111110101111000010000000>;
+P_0x57890a9a6300 .param/l "COUNTER_WIDTH" 1 3 13, +C4<00000000000000000000000000000101>;
+P_0x57890a9a6340 .param/l "M" 1 3 12, +C4<0000000000000000000000000000000000000000000000000000000000011011>;
+v0x57890a9bb620_0 .net *"_ivl_0", 63 0, L_0x57890a9d0850;  1 drivers
+L_0x7c1e35186018 .functor BUFT 1, C4<00000000000000000000000000000000000000000000000000000000000>, C4<0>, C4<0>, C4<0>;
+v0x57890a9d0020_0 .net *"_ivl_3", 58 0, L_0x7c1e35186018;  1 drivers
+L_0x7c1e35186060 .functor BUFT 1, C4<0000000000000000000000000000000000000000000000000000000000011010>, C4<0>, C4<0>, C4<0>;
+v0x57890a9d0100_0 .net/2u *"_ivl_4", 63 0, L_0x7c1e35186060;  1 drivers
+v0x57890a9d01f0_0 .net "clk", 0 0, v0x57890a9d05e0_0;  1 drivers
+v0x57890a9d02b0_0 .var "count_reg", 4 0;
+v0x57890a9d03e0_0 .net "rst", 0 0, v0x57890a9d0680_0;  1 drivers
+v0x57890a9d04a0_0 .net "tick", 0 0, L_0x57890a9e0a30;  alias, 1 drivers
+E_0x57890a980c10/0 .event negedge, v0x57890a9d03e0_0;
+E_0x57890a980c10/1 .event posedge, v0x57890a9d01f0_0;
+E_0x57890a980c10 .event/or E_0x57890a980c10/0, E_0x57890a980c10/1;
+L_0x57890a9d0850 .concat [ 5 59 0 0], v0x57890a9d02b0_0, L_0x7c1e35186018;
+L_0x57890a9e0a30 .cmp/eq 64, L_0x57890a9d0850, L_0x7c1e35186060;
+    .scope S_0x57890a980490;
+T_0 ;
+    %wait E_0x57890a980c10;
+    %load/vec4 v0x57890a9d03e0_0;
+    %nor/r;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_0.0, 8;
+    %pushi/vec4 0, 0, 5;
+    %assign/vec4 v0x57890a9d02b0_0, 0;
+    %jmp T_0.1;
+T_0.0 ;
+    %load/vec4 v0x57890a9d02b0_0;
+    %pad/u 64;
+    %cmpi/e 26, 0, 64;
+    %jmp/0xz  T_0.2, 4;
+    %pushi/vec4 0, 0, 5;
+    %assign/vec4 v0x57890a9d02b0_0, 0;
+    %jmp T_0.3;
+T_0.2 ;
+    %load/vec4 v0x57890a9d02b0_0;
+    %addi 1, 0, 5;
+    %assign/vec4 v0x57890a9d02b0_0, 0;
+T_0.3 ;
+T_0.1 ;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_0x57890a9a95a0;
+T_1 ;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x57890a9d05e0_0, 0, 1;
+    %end;
+    .thread T_1;
+    .scope S_0x57890a9a95a0;
+T_2 ;
+    %delay 10000, 0;
+    %load/vec4 v0x57890a9d05e0_0;
+    %inv;
+    %store/vec4 v0x57890a9d05e0_0, 0, 1;
+    %jmp T_2;
+    .thread T_2;
+    .scope S_0x57890a9a95a0;
+T_3 ;
+    %vpi_call 2 25 "$dumpfile", "baud_gen.vcd" {0 0 0};
+    %vpi_call 2 26 "$dumpvars", 32'sb00000000000000000000000000000000, S_0x57890a9a95a0 {0 0 0};
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x57890a9d0680_0, 0, 1;
+    %delay 20000, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x57890a9d0680_0, 0, 1;
+    %delay 2000000, 0;
+    %vpi_call 2 37 "$display", "Simulation complete. Open GTKWave to inspect baud_gen.vcd" {0 0 0};
+    %vpi_call 2 38 "$finish" {0 0 0};
+    %end;
+    .thread T_3;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "baud_tb.v";
+    "baud.v";
