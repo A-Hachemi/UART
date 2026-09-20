@@ -6,6 +6,7 @@ module uart_tx_tb;
   reg rst;
   reg [7:0] data_in;
   reg start;
+  reg tick;
 
   wire busy;
   wire serial_out;
@@ -13,16 +14,32 @@ module uart_tx_tb;
   uart_tx dut(
     .clk(clk),
     .rst(rst),
+    .tick(tick),
     .data_in(data_in),
     .start(start),
     .busy(busy),
     .serial_out(serial_out)
   );
 
-always #5 clk = ~clk;
+integer count;
+
+always #10 clk = ~clk;
+
+always @(posedge clk) begin 
+  if (count == 3) begin 
+    tick <= 1'b1;
+    count <= 0;
+  end
+  else begin 
+    tick <= 1'b0;
+    count <= count + 1;
+  end
+end
 
 initial begin
   clk = 1'b0;
+  tick = 1'b0;
+  count = 0;
 end 
 
 initial begin
@@ -34,7 +51,7 @@ initial begin
   start = 1'b0;
   data_in = 8'b0;
 
-  #20;
+  #30;
 
   rst = 1'b1;
 
@@ -44,7 +61,7 @@ initial begin
   #10;
   start = 1'b0;
 
-  #120;
+  #1000;
 
   $finish;
 
