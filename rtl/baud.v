@@ -1,4 +1,16 @@
-// Baud Rate Generator (16x Oversampling Clock Enable)
+/*
+
+Title: UART baud generator
+Designer: Guerrout adem
+Affiliation: University of Blida 1 - CDTA
+
+UART Information:
+  Baudrate: 115200
+  Frame shape: 1'b start | 8'b data LSB first | 1'b stop
+  Parity: N/A
+*/
+
+
 module baud #(
     parameter CLK_freq  = 50000000, // 50 MHz default
     parameter BAUD_RATE = 115200    // Target Baud Rate
