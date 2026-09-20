@@ -1,3 +1,16 @@
+/*
+
+Title: UART baud generator testbunch
+Designer: Guerrout adem
+Affiliation: University of Blida 1 - CDTA
+
+UART Information:
+  Baudrate: 115200
+  Frame shape: 1'b start | 8'b data LSB first | 1'b stop
+  Parity: N/A
+*/
+
+
 `timescale 1ns/1ps
 
 module baud_tb;
