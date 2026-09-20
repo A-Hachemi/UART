@@ -51,7 +51,7 @@ initial begin
   start = 1'b0;
   data_in = 8'b0;
 
-  #30;
+  #25;
 
   rst = 1'b1;
 
