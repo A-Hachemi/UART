@@ -64,7 +64,7 @@ module uart_top_tb;
     else
       $display("[%0t ns] FAIL: RX = %b, rx_done = %b", $time, rx_out, rx_done);
 
-    #100;
+    #10000;
     $finish;
   end
 

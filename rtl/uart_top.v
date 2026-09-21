@@ -26,12 +26,13 @@ module uart_top (
 
 );
 
-  wire tick;
+  wire tick_16;
+  wire tick_baud;
 
   uart_tx u_uart_tx (
     .clk (clk),
     .rst (rst),
-    .tick (tick),
+    .tick (tick_baud),
     .data_in (tx_in),
     .start (start),
     .busy (busy),
@@ -41,7 +42,7 @@ module uart_top (
   uart_rx u_uart_rx (
     .clk (clk),
     .rst (rst),
-    .tick (tick),
+    .tick (tick_16),
     .rx (rx_in),
     .rx_data (rx_out),
     .rx_done (rx_done)
@@ -50,7 +51,8 @@ module uart_top (
   baud u_baud_gen (
     .clk (clk),
     .rst (rst),
-    .tick (tick)
+    .tick_baud (tick_baud),
+    .tick_16x (tick_16)
   );
   
 endmodule
