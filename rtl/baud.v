@@ -12,34 +12,42 @@ UART Information:
 
 
 module baud #(
-    parameter CLK_freq  = 50000000, // 50 MHz default
+    parameter CLK_freq  = 50000000, 
     parameter BAUD_RATE = 115200    // Target Baud Rate
 )(
-    input  wire clk,   // System clock
-    input  wire rst, // Active-low asynchronous reset
-    output wire tick   // 16x Baud tick pulse
+    input  wire clk,   
+    input  wire rst, // Active-low 
+    output wire tick_baud,
+    output wire tick_16x
 );
-
-    // Calculate count threshold M = CLK_freq / (16 * BAUD_RATE)
+    localparam N = CLK_freq / BAUD_RATE;
+    localparam COUNTER_WIDTH1 = $clog2(N);
+    
     localparam M = CLK_freq / (16 * BAUD_RATE);
-    localparam COUNTER_WIDTH = $clog2(M);
+    localparam COUNTER_WIDTH2 = $clog2(M);
 
-    reg [COUNTER_WIDTH-1:0] count_reg;
+    reg [COUNTER_WIDTH1-1:0] count_reg1;
+    reg [COUNTER_WIDTH2-1:0] count_reg2;
 
     always @(posedge clk or negedge rst) begin
         if (!rst) 
         begin
-            count_reg <= {COUNTER_WIDTH{1'b0}};
+            count_reg1 <= {COUNTER_WIDTH1{1'b0}};
+            count_reg2 <= {COUNTER_WIDTH2{1'b0}};
         end 
         else begin
-            if (count_reg == M - 1)
-                count_reg <= {COUNTER_WIDTH{1'b0}};
+            if (count_reg1 == N - 1 )
+                count_reg1 <= {COUNTER_WIDTH1{1'b0}};
             else
-                count_reg <= count_reg + 1'b1;
-        end
+                count_reg1 <= count_reg1 + 1'b1;
+
+           if (count_reg2 == M - 1 )
+                count_reg2 <= {COUNTER_WIDTH2{1'b0}};
+            else
+                count_reg2 <= count_reg2 + 1'b1;
+         end
     end
 
-    // Tick pulse goes HIGH for exactly one clock period when count reaches M-1
-    assign tick = (count_reg == M - 1);
-
+    assign tick_baud = (count_reg1 == N - 1);
+    assign tick_16x  = (count_reg2 == M - 1);
 endmodule

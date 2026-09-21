@@ -17,37 +17,31 @@ module baud_tb;
 
     reg clk = 0;
     reg rst;
-    wire tick;
 
-    // Instantiate with smaller parameters for fast simulation viewing
-    // M = 50000000 / (16 * 115200) = 27 clock ticks per baud pulse
+    wire tick_baud;
+    wire tick_16x;
+    // DUT
     baud #(
         .CLK_freq(50000000),
         .BAUD_RATE(115200)
     ) uut (
         .clk(clk),
         .rst(rst),
-        .tick(tick)
+        .tick_baud(tick_baud),
+        .tick_16x(tick_16x)
     );
-
-    // 50MHz clock generation 
-    always #10 clk = ~clk;
+    
+    always #10 clk = ~clk;     // 50 MHz clk
 
     initial begin
-        // --- GTKWave VCD Setup ---
+
+        // GTKWave VCD
         $dumpfile("baud_gen.vcd");
         $dumpvars(0, baud_tb);
+        rst = 0; #20; rst = 1;
+        #20000;// Run simulation
 
-        // --- Test Sequence ---
-        rst = 0;
-
-        // Apply Reset
-        #20 rst = 1;
-
-        // Run simulation long enough to capture multiple tick pulses
-        #2000;
-
-        $display("Simulation complete. Open GTKWave to inspect baud_gen.vcd");
+        $display("Simulation complete.");
         $finish;
     end
 
